@@ -1,5 +1,5 @@
 import React from "react";
-
+import logo from "../../Assets/logo.png";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import {
@@ -22,6 +22,7 @@ import EmailIcon from "@material-ui/icons/Email";
 import clsx from "clsx";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import LockIcon from "@material-ui/icons/Lock";
 
 function Copyright() {
   return (
@@ -43,14 +44,13 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    justifyContent: "center",
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
+
   form: {
     width: "100%",
     marginTop: theme.spacing(1),
+    alignContent: "center",
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -60,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   textField: {
+    alignContent: "center",
     width: "45ch",
   },
 }));
@@ -67,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
 export default function UserLogin() {
   const classes = useStyles();
   const [values, setValues] = React.useState({
-    amount: "",
+    email: "",
     password: "",
     weight: "",
     weightRange: "",
@@ -91,61 +92,110 @@ export default function UserLogin() {
     event.preventDefault();
   };
 
+  const handleSubmit = () => {
+    // const user = {
+    //   username:values.email,
+    //  password:  values.password,
+    // };
+    // const url =
+      // "{host}/login";
+
+    // const config = {
+    //   method: "post",
+    //   headers: {
+    //     "Content-Type": "application/json;charset=utf-8",
+    //   },
+    //   body: JSON.stringify(user),
+    // };
+
+    // fetch(url)
+    //   .then((responce) => responce.json())
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((error) => {
+    //     alert("Something went wrong. Please try again after some time");
+    //   });
+  };
+
   return (
     <Container component="main" maxWidth="xs" justify="center">
       <Paper className={classes.paper}>
         <CssBaseline />
         <div className={classes.paper}>
-          <Typography component="h1" variant="h5">
-            <img
-              src="C:\Users\shind\Work\snapcodeassessment\src\Logo\logo.png"
-              height="100%"
-              width="100%"
-            />
+          <Typography
+            component="h1"
+            variant="h5"
+            justifyContent="center"
+            item
+            xs={25}
+            sm={25}
+            md={13}
+            lg={13}
+            style={{
+              textAlign: "center",
+            }}
+          >
+            <img src={logo} height="70%" width="70%" justify="center" />
           </Typography>
           <form className={classes.form} noValidate>
-            <TextField
-              id="standard-start-adornment"
-              className={clsx(classes.margin, classes.textField)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <EmailIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-
-            <FormControl className={clsx(classes.margin, classes.textField)}>
-              <Input
-                id="standard-adornment-password"
-                type={values.showPassword ? "text" : "password"}
-                value={values.password}
-                onChange={handleChange("password")}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
-                      {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
+            <div>
+              <EmailIcon />
+              <TextField
+                id="standard-start-adornment"
+                className={clsx(classes.margin, classes.textField)}
+                value={values.email}
+                onChange={handleChange("email")}
               />
-            </FormControl>
+            </div>
+            <div>
+              <LockIcon />
+              <FormControl className={clsx(classes.margin, classes.textField)}>
+                <Input
+                  id="standard-adornment-password"
+                  type={values.showPassword ? "text" : "password"}
+                  value={values.password}
+                  onChange={handleChange("password")}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {values.showPassword ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </div>
 
-            <Button
-              type="submit"
-              fullWidth
-              align="center"
-              variant="contained"
-              color="secondary"
-              className={classes.submit}
+            <Grid
+              item
+              xs={25}
+              sm={25}
+              md={13}
+              lg={13}
+              style={{
+                textAlign: "center",
+              }}
             >
-              Sign In
-            </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                color="secondary"
+                className={classes.submit}
+                href="/user/dashboard"
+                onClick={handleSubmit}
+              >
+                Sign In
+              </Button>
+            </Grid>
             <Grid container>
               <Grid item xs>
                 <Checkbox

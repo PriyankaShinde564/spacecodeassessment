@@ -23,6 +23,7 @@ import clsx from "clsx";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import LockIcon from "@material-ui/icons/Lock";
+import { useHistory } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -65,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function UserLogin() {
+export default function UserLogin(props) {
   const classes = useStyles();
   const [values, setValues] = React.useState({
     email: "",
@@ -73,7 +74,10 @@ export default function UserLogin() {
     weight: "",
     weightRange: "",
     showPassword: false,
+    webToken: "",
   });
+  const history = useHistory();
+
   const [checked, setChecked] = React.useState(true);
 
   const handleChangeCheck = (event) => {
@@ -93,29 +97,28 @@ export default function UserLogin() {
   };
 
   const handleSubmit = () => {
-    // const user = {
-    //   username:values.email,
-    //  password:  values.password,
-    // };
-    // const url =
-      // "{host}/login";
+    const user = {
+      username: values.email,
+      password: values.password,
+    };
 
-    // const config = {
-    //   method: "post",
-    //   headers: {
-    //     "Content-Type": "application/json;charset=utf-8",
-    //   },
-    //   body: JSON.stringify(user),
-    // };
-
-    // fetch(url)
-    //   .then((responce) => responce.json())
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((error) => {
-    //     alert("Something went wrong. Please try again after some time");
-    //   });
+    fetch("https://d.jeweltrace.in/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", type: "Web" },
+      body: JSON.stringify(user),
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        console.log("Success:", res);
+        if (res.status) {
+          history.push("/user/dashboard", {
+            webToken: res.data.web_token[0],
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -186,11 +189,9 @@ export default function UserLogin() {
               }}
             >
               <Button
-                type="submit"
                 variant="contained"
                 color="secondary"
                 className={classes.submit}
-                href="/user/dashboard"
                 onClick={handleSubmit}
               >
                 Sign In

@@ -18,7 +18,7 @@ export const mainListItems = (
       <ListItemText primary="Dashboard" />
     </ListItem>
 
-    <ListItem button>
+    <ListItem button component ={Link} to="/inventory" onClick={onItemClick("Inventory")}>
       <ListItemIcon>
         <ListAltIcon />
       </ListItemIcon>

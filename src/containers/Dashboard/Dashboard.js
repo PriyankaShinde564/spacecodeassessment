@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import logo from "../../Assets/logo.png";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
@@ -25,23 +25,23 @@ import {
   Container,
   Typography,
   ThemeProvider,
+  Box,
 } from "@material-ui/core";
 import Inventory from "./Inventory";
-
 import { createMuiTheme } from "@material-ui/core/styles";
-import purple from "@material-ui/core/colors/purple";
-import green from "@material-ui/core/colors/green";
-
-const appBarTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: purple[500],
-    },
-    secondary: {
-      main: green[500],
-    },
-  },
-});
+import {
+  red,
+  cyan,
+  purple,
+  blue,
+  green,
+  yellow,
+  lightBlue,
+  teal,
+  lightGreen,
+} from "@material-ui/core/colors";
+import { useHistory } from "react-router-dom";
+import Theme from "./Theme";
 
 const drawerWidth = 240;
 
@@ -135,12 +135,100 @@ export default function Dashboard(props) {
     setOpen(false);
   };
 
-  const webToken = props.location.state.webToken;
+  const setBlueTheme = () => {
+    const blueTheme = createMuiTheme({
+      palette: {
+        primary: blue,
+      },
+    });
+    setAppTheme(blueTheme);
+  };
+  const setPurpleTheme = () => {
+    const purpleTheme = createMuiTheme({
+      palette: {
+        primary: purple,
+      },
+    });
+
+    setAppTheme(purpleTheme);
+  };
+  const setGreenTheme = () => {
+    const greenTheme = createMuiTheme({
+      palette: {
+        primary: green,
+      },
+    });
+    setAppTheme(greenTheme);
+  };
+
+  ///
+  const setRedTheme = () => {
+    const redTheme = createMuiTheme({
+      palette: {
+        primary: red,
+      },
+    });
+    setAppTheme(redTheme);
+  };
+  const setYellowTheme = () => {
+    const yellowTheme = createMuiTheme({
+      palette: {
+        primary: yellow,
+      },
+    });
+    setAppTheme(yellowTheme);
+  };
+  const setCyanTheme = () => {
+    const cyanTheme = createMuiTheme({
+      palette: {
+        primary: cyan,
+      },
+    });
+    setAppTheme(cyanTheme);
+  };
+  const setLightBlueTheme = () => {
+    const lightBlueTheme = createMuiTheme({
+      palette: {
+        primary: lightBlue,
+      },
+    });
+    setAppTheme(lightBlueTheme);
+  };
+  const setTealTheme = () => {
+    const tealTheme = createMuiTheme({
+      palette: {
+        primary: teal,
+      },
+    });
+    setAppTheme(tealTheme);
+  };
+  const setLightGreenTheme = () => {
+    const lightGreenTheme = createMuiTheme({
+      palette: {
+        primary: lightGreen,
+      },
+    });
+    setAppTheme(lightGreenTheme);
+  };
+  const history = useHistory();
+
+  const [appTheme, setAppTheme] = React.useState();
+
+  let webToken;
+  useEffect(() => {
+    if (!props.location.state) {
+      // console.log("webtoken", props.location.state.webToken);
+
+      history.push("/user/login");
+    } else if (props.location.state && props.location.state.webToken) {
+      webToken = props.location.state.webToken;
+    }
+  });
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <ThemeProvider theme={appBarTheme}>
+      <ThemeProvider theme={appTheme}>
         <AppBar
           position="absolute"
           className={clsx(classes.appBar, open && classes.appBarShift)}
@@ -178,7 +266,7 @@ export default function Dashboard(props) {
           </div>
           <Divider />
           <List>
-            <Link to="/">
+            <Link to="/user/dashboard">
               <ListItem button>
                 <ListItemIcon>
                   <DashboardIcon />
@@ -186,7 +274,7 @@ export default function Dashboard(props) {
                 <ListItemText primary="Dashboard" />
               </ListItem>
             </Link>
-            <Link to="/inventory" disableUnderline>
+            <Link to="/user/dashboard/inventory">
               <ListItem button>
                 <ListItemIcon>
                   <ListAltIcon />
@@ -226,6 +314,41 @@ export default function Dashboard(props) {
                 <ListItemText primary="Theme" />
               </ListItem>
             </Link>
+            <ListItem>
+              <Box bgcolor="blue" m={0.5} p={2} onClick={setBlueTheme}></Box>
+              <Box
+                bgcolor="purple"
+                m={0.5}
+                p={2}
+                onClick={setPurpleTheme}
+              ></Box>
+              <Box bgcolor="green" m={0.5} p={2} onClick={setGreenTheme}></Box>
+            </ListItem>
+            <ListItem>
+              <Box bgcolor="red" m={0.5} p={2} onClick={setRedTheme}></Box>
+              <Box
+                bgcolor="yellow"
+                m={0.5}
+                p={2}
+                onClick={setYellowTheme}
+              ></Box>
+              <Box bgcolor="cyan" m={0.5} p={2} onClick={setCyanTheme}></Box>
+            </ListItem>
+            <ListItem>
+              <Box
+                bgcolor="lightBlue"
+                m={0.5}
+                p={2}
+                onClick={setLightBlueTheme}
+              ></Box>
+              <Box bgcolor="teal" m={0.5} p={2} onClick={setTealTheme}></Box>
+              <Box
+                bgcolor="lightGreen"
+                m={0.5}
+                p={2}
+                onClick={setLightGreenTheme}
+              ></Box>
+            </ListItem>
           </List>
         </Drawer>
         <main className={classes.content}>
@@ -238,7 +361,7 @@ export default function Dashboard(props) {
                 </Typography>
               </Container>
             </Route>
-            <Route exact path="/inventory">
+            <Route exact path="/user/dashboard/inventory">
               <Container>
                 <Typography variant="h3" gutterBottom>
                   inventory
@@ -271,6 +394,7 @@ export default function Dashboard(props) {
               <Container>
                 <Typography variant="h3" gutterBottom>
                   Theme
+                  <Theme />
                 </Typography>
               </Container>
             </Route>

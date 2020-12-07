@@ -133,7 +133,7 @@ export default function Dashboard(props) {
   let webToken;
   useEffect(() => {
     if (!props.location.state) {
-      // history.push("/user/login");
+      history.push("/user/login");
     } else if (props.location.state && props.location.state.webToken) {
       webToken = props.location.state.webToken;
     }

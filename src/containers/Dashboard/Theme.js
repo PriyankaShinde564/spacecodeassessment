@@ -1,55 +1,35 @@
-import React, { useEffect } from "react";
-import logo from "../../Assets/logo.png";
-import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import DashboardIcon from "@material-ui/icons/Dashboard";
-import PeopleIcon from "@material-ui/icons/People";
-import BarChartIcon from "@material-ui/icons/BarChart";
-import ListAltIcon from "@material-ui/icons/ListAlt";
-import ReceiptIcon from "@material-ui/icons/Receipt";
-import ColorLensIcon from "@material-ui/icons/ColorLens";
-import {
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Container,
-  Typography,
-  ThemeProvider,
-  Box,
-} from "@material-ui/core";
-
+import React from "react";
+import { ListItem, Box } from "@material-ui/core";
 import { createMuiTheme } from "@material-ui/core/styles";
-import purple from "@material-ui/core/colors/purple";
-import blue from "@material-ui/core/colors/blue";
-import green from "@material-ui/core/colors/green";
+import {
+  red,
+  cyan,
+  purple,
+  blue,
+  green,
+  yellow,
+  lightBlue,
+  teal,
+  lightGreen,
+} from "@material-ui/core/colors";
 
-export default function Theme(props) {
+export default function Theme({ onThemeChange }) {
   const setBlueTheme = () => {
     const blueTheme = createMuiTheme({
       palette: {
         primary: blue,
       },
     });
-    setAppTheme(blueTheme);
+    onThemeChange(blueTheme);
   };
-  const setPinkTheme = () => {
-    const pinkTheme = createMuiTheme({
+  const setPurpleTheme = () => {
+    const purpleTheme = createMuiTheme({
       palette: {
         primary: purple,
       },
     });
 
-    setAppTheme(pinkTheme);
+    onThemeChange(purpleTheme);
   };
   const setGreenTheme = () => {
     console.log("green");
@@ -58,17 +38,83 @@ export default function Theme(props) {
         primary: green,
       },
     });
-    setAppTheme(greenTheme);
+    onThemeChange(greenTheme);
   };
 
-  const [appTheme, setAppTheme] = React.useState();
-
+  const setRedTheme = () => {
+    const redTheme = createMuiTheme({
+      palette: {
+        primary: red,
+      },
+    });
+    onThemeChange(redTheme);
+  };
+  const setYellowTheme = () => {
+    const yellowTheme = createMuiTheme({
+      palette: {
+        primary: yellow,
+      },
+    });
+    onThemeChange(yellowTheme);
+  };
+  const setCyanTheme = () => {
+    const cyanTheme = createMuiTheme({
+      palette: {
+        primary: cyan,
+      },
+    });
+    onThemeChange(cyanTheme);
+  };
+  const setLightBlueTheme = () => {
+    const lightBlueTheme = createMuiTheme({
+      palette: {
+        primary: lightBlue,
+      },
+    });
+    onThemeChange(lightBlueTheme);
+  };
+  const setTealTheme = () => {
+    const tealTheme = createMuiTheme({
+      palette: {
+        primary: teal,
+      },
+    });
+    onThemeChange(tealTheme);
+  };
+  const setLightGreenTheme = () => {
+    const lightGreenTheme = createMuiTheme({
+      palette: {
+        primary: lightGreen,
+      },
+    });
+    onThemeChange(lightGreenTheme);
+  };
   return (
     <div>
       <ListItem>
         <Box bgcolor="blue" m={0.5} p={2} onClick={setBlueTheme}></Box>
-        <Box bgcolor="purple" m={0.5} p={2} onClick={setPinkTheme}></Box>
+        <Box bgcolor="purple" m={0.5} p={2} onClick={setPurpleTheme}></Box>
         <Box bgcolor="green" m={0.5} p={2} onClick={setGreenTheme}></Box>
+      </ListItem>
+      <ListItem>
+        <Box bgcolor="red" m={0.5} p={2} onClick={setRedTheme}></Box>
+        <Box bgcolor="yellow" m={0.5} p={2} onClick={setYellowTheme}></Box>
+        <Box bgcolor="cyan" m={0.5} p={2} onClick={setCyanTheme}></Box>
+      </ListItem>
+      <ListItem>
+        <Box
+          bgcolor="lightBlue"
+          m={0.5}
+          p={2}
+          onClick={setLightBlueTheme}
+        ></Box>
+        <Box bgcolor="teal" m={0.5} p={2} onClick={setTealTheme}></Box>
+        <Box
+          bgcolor="lightGreen"
+          m={0.5}
+          p={2}
+          onClick={setLightGreenTheme}
+        ></Box>
       </ListItem>
     </div>
   );

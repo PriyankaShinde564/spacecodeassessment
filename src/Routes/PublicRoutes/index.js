@@ -13,7 +13,6 @@ export default class PublicRoutes extends React.Component {
           <Switch>
             <Route path="/user/login" component={UserLogin} />
             <Route path="/user/dashboard" component={Dashboard} />
-            {/* <Route path="/" component={Dashboard} /> */}
             <Route path="/user/dashboard/inventory" component={Inventory} />
           </Switch>
         </Router>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../../Assets/logo.png";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
@@ -28,20 +28,10 @@ import {
   Box,
 } from "@material-ui/core";
 import Inventory from "./Inventory";
-import { createMuiTheme } from "@material-ui/core/styles";
-import {
-  red,
-  cyan,
-  purple,
-  blue,
-  green,
-  yellow,
-  lightBlue,
-  teal,
-  lightGreen,
-} from "@material-ui/core/colors";
 import { useHistory } from "react-router-dom";
 import Theme from "./Theme";
+import Chart from "./Chart";
+import { grey } from "@material-ui/core/colors";
 
 const drawerWidth = 240;
 
@@ -84,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   drawerPaper: {
+    backgroundColor: grey[50],
     position: "relative",
     whiteSpace: "nowrap",
     width: drawerWidth,
@@ -135,95 +126,36 @@ export default function Dashboard(props) {
     setOpen(false);
   };
 
-  const setBlueTheme = () => {
-    const blueTheme = createMuiTheme({
-      palette: {
-        primary: blue,
-      },
-    });
-    setAppTheme(blueTheme);
-  };
-  const setPurpleTheme = () => {
-    const purpleTheme = createMuiTheme({
-      palette: {
-        primary: purple,
-      },
-    });
-
-    setAppTheme(purpleTheme);
-  };
-  const setGreenTheme = () => {
-    const greenTheme = createMuiTheme({
-      palette: {
-        primary: green,
-      },
-    });
-    setAppTheme(greenTheme);
-  };
-
-  ///
-  const setRedTheme = () => {
-    const redTheme = createMuiTheme({
-      palette: {
-        primary: red,
-      },
-    });
-    setAppTheme(redTheme);
-  };
-  const setYellowTheme = () => {
-    const yellowTheme = createMuiTheme({
-      palette: {
-        primary: yellow,
-      },
-    });
-    setAppTheme(yellowTheme);
-  };
-  const setCyanTheme = () => {
-    const cyanTheme = createMuiTheme({
-      palette: {
-        primary: cyan,
-      },
-    });
-    setAppTheme(cyanTheme);
-  };
-  const setLightBlueTheme = () => {
-    const lightBlueTheme = createMuiTheme({
-      palette: {
-        primary: lightBlue,
-      },
-    });
-    setAppTheme(lightBlueTheme);
-  };
-  const setTealTheme = () => {
-    const tealTheme = createMuiTheme({
-      palette: {
-        primary: teal,
-      },
-    });
-    setAppTheme(tealTheme);
-  };
-  const setLightGreenTheme = () => {
-    const lightGreenTheme = createMuiTheme({
-      palette: {
-        primary: lightGreen,
-      },
-    });
-    setAppTheme(lightGreenTheme);
-  };
+  const [appTheme, setAppTheme] = useState();
+  const [jwelaryData, setJwelaryData] = useState([]);
   const history = useHistory();
-
-  const [appTheme, setAppTheme] = React.useState();
 
   let webToken;
   useEffect(() => {
     if (!props.location.state) {
-      // console.log("webtoken", props.location.state.webToken);
-
-      history.push("/user/login");
+      // history.push("/user/login");
     } else if (props.location.state && props.location.state.webToken) {
       webToken = props.location.state.webToken;
     }
   });
+
+  useEffect(() => {
+    fetch(
+      "https://d.jeweltrace.in/sku?id=5cfe1974a24ac0157013f843&rootInfo=company&page_no=0&limit=10",
+      {
+        method: "GET",
+        headers: {
+          "x-web-token":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjUyNTIiLCJuYW1lIjoiUGFua2FqIEdveWFuaSIsInBhc3N3b3JkIjoiYWRtaW4iLCJyb290Ijp7InN1YlNlY3Rpb25JZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdlMiIsInNlY3Rpb25JZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdlMSIsImZsb29ySWQiOiI1ZDM5Nzk0NTc2ZGZkOTUzMzVlM2Q3ZTAiLCJicmFuY2hJZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdkZiIsImNvbXBhbnlJZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdkZSJ9LCJlbXBJZCI6Im5laGEucGFybWFyQHNwYWNlY29kZS5jb20iLCJ1c2VydHlwZSI6IkFETUlOIiwiaWF0IjoxNjA2OTczNTg4LCJleHAiOjE2MjcyMDYwODV9.4iQwzx_i-J0P_0CyHqX4amszSwCbKqTXGy1V1rN38WE",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("jwelaryData in prizecompo  ", data.data_array);
+        setJwelaryData(data.data_array);
+      });
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -257,107 +189,93 @@ export default function Dashboard(props) {
           }}
           open={open}
         >
-          <img src={logo} height="4%" width="50%" />
-
           <div className={classes.toolbarIcon}>
+            <Box>
+              <ThemeProvider theme={appTheme}>
+                <img src={logo} height="100%" width="70%" />
+              </ThemeProvider>
+            </Box>
             <IconButton onClick={handleDrawerClose}>
               <ChevronLeftIcon />
             </IconButton>
           </div>
           <Divider />
           <List>
-            <Link to="/user/dashboard">
+            <Link
+              to="/user/dashboard"
+              style={{ paddingLeft: 13, textDecoration: "none" }}
+            >
               <ListItem button>
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
-                <ListItemText primary="Dashboard" />
+                <ListItemText secondary="Dashboard" />
               </ListItem>
             </Link>
-            <Link to="/user/dashboard/inventory">
+            <Link
+              to="/user/dashboard/inventory"
+              style={{ paddingLeft: 13, textDecoration: "none" }}
+            >
               <ListItem button>
                 <ListItemIcon>
                   <ListAltIcon />
                 </ListItemIcon>
-                <ListItemText primary="Inventory" />
+                <ListItemText secondary="Inventory" />
               </ListItem>
             </Link>
-            <Link to="/transactions">
+            <Link
+              to="/transactions"
+              style={{ paddingLeft: 13, textDecoration: "none" }}
+            >
               <ListItem button>
                 <ListItemIcon>
                   <ReceiptIcon />
                 </ListItemIcon>
-                <ListItemText primary="Transactions" />
+                <ListItemText secondary="Transactions" />
               </ListItem>
             </Link>
-            <Link to="/customers">
+            <Link
+              to="/customers"
+              style={{ paddingLeft: 13, textDecoration: "none" }}
+            >
               <ListItem button>
                 <ListItemIcon>
                   <PeopleIcon />
                 </ListItemIcon>
-                <ListItemText primary="Customers" />
+                <ListItemText secondary="Customers" />
               </ListItem>
             </Link>
-            <Link to="/reports">
+            <Link
+              to="/reports"
+              style={{ paddingLeft: 13, textDecoration: "none" }}
+            >
               <ListItem button>
                 <ListItemIcon>
                   <BarChartIcon />
                 </ListItemIcon>
-                <ListItemText primary="Reports" />
+                <ListItemText secondary="Reports" />
               </ListItem>
             </Link>
-            <Link to="/theme">
+            <Link
+              to="/theme"
+              style={{ paddingLeft: 13, textDecoration: "none" }}
+            >
               <ListItem button>
                 <ListItemIcon>
                   <ColorLensIcon />
                 </ListItemIcon>
-                <ListItemText primary="Theme" />
+                <ListItemText secondary="Theme" />
               </ListItem>
             </Link>
-            <ListItem>
-              <Box bgcolor="blue" m={0.5} p={2} onClick={setBlueTheme}></Box>
-              <Box
-                bgcolor="purple"
-                m={0.5}
-                p={2}
-                onClick={setPurpleTheme}
-              ></Box>
-              <Box bgcolor="green" m={0.5} p={2} onClick={setGreenTheme}></Box>
-            </ListItem>
-            <ListItem>
-              <Box bgcolor="red" m={0.5} p={2} onClick={setRedTheme}></Box>
-              <Box
-                bgcolor="yellow"
-                m={0.5}
-                p={2}
-                onClick={setYellowTheme}
-              ></Box>
-              <Box bgcolor="cyan" m={0.5} p={2} onClick={setCyanTheme}></Box>
-            </ListItem>
-            <ListItem>
-              <Box
-                bgcolor="lightBlue"
-                m={0.5}
-                p={2}
-                onClick={setLightBlueTheme}
-              ></Box>
-              <Box bgcolor="teal" m={0.5} p={2} onClick={setTealTheme}></Box>
-              <Box
-                bgcolor="lightGreen"
-                m={0.5}
-                p={2}
-                onClick={setLightGreenTheme}
-              ></Box>
-            </ListItem>
           </List>
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <Switch>
-            <Route exact path="/">
+            <Route exact path="/user/dashboard">
               <Container>
                 <Typography variant="h3" gutterBottom>
-                  Dashboard
+                  <Chart data={jwelaryData} />
                 </Typography>
               </Container>
             </Route>
@@ -366,7 +284,7 @@ export default function Dashboard(props) {
                 <Typography variant="h3" gutterBottom>
                   inventory
                 </Typography>
-                <Inventory webToken={webToken} />
+                <Inventory data={jwelaryData} webToken={webToken} />
               </Container>
             </Route>
             <Route exact path="/transactions">
@@ -394,7 +312,7 @@ export default function Dashboard(props) {
               <Container>
                 <Typography variant="h3" gutterBottom>
                   Theme
-                  <Theme />
+                  <Theme onThemeChange={setAppTheme} />
                 </Typography>
               </Container>
             </Route>

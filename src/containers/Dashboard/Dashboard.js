@@ -26,6 +26,7 @@ import {
   Typography,
   ThemeProvider,
   Box,
+  MenuItem,
 } from "@material-ui/core";
 import Inventory from "./Inventory";
 import { useHistory } from "react-router-dom";
@@ -128,6 +129,7 @@ export default function Dashboard(props) {
 
   const [appTheme, setAppTheme] = useState();
   const [jwelaryData, setJwelaryData] = useState([]);
+  const [appBarTitleName, setAppBarTitleName] = useState("Dashboard");
   const history = useHistory();
 
   let webToken;
@@ -138,6 +140,10 @@ export default function Dashboard(props) {
       webToken = props.location.state.webToken;
     }
   });
+
+  const handleAppBarTitle = () => {
+    setAppBarTitleName("Inventory");
+  };
 
   useEffect(() => {
     fetch(
@@ -152,7 +158,6 @@ export default function Dashboard(props) {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log("jwelaryData in prizecompo  ", data.data_array);
         setJwelaryData(data.data_array);
       });
   }, []);
@@ -177,6 +182,17 @@ export default function Dashboard(props) {
             >
               <MenuIcon />
             </IconButton>
+
+            <Typography
+              component="h1"
+              variant="h6"
+              color="inherit"
+              noWrap
+              className={classes.title}
+            >
+              {appBarTitleName}
+              <MenuItem primaryText="Refresh" />
+            </Typography>
           </Toolbar>
         </AppBar>
       </ThemeProvider>
@@ -216,7 +232,12 @@ export default function Dashboard(props) {
               to="/user/dashboard/inventory"
               style={{ paddingLeft: 13, textDecoration: "none" }}
             >
-              <ListItem button>
+              <ListItem
+                button
+                onClick={() => {
+                  setAppBarTitleName("Inventory");
+                }}
+              >
                 <ListItemIcon>
                   <ListAltIcon />
                 </ListItemIcon>
@@ -227,7 +248,12 @@ export default function Dashboard(props) {
               to="/transactions"
               style={{ paddingLeft: 13, textDecoration: "none" }}
             >
-              <ListItem button>
+              <ListItem
+                button
+                onClick={() => {
+                  setAppBarTitleName("Transactions");
+                }}
+              >
                 <ListItemIcon>
                   <ReceiptIcon />
                 </ListItemIcon>
@@ -238,7 +264,12 @@ export default function Dashboard(props) {
               to="/customers"
               style={{ paddingLeft: 13, textDecoration: "none" }}
             >
-              <ListItem button>
+              <ListItem
+                button
+                onClick={() => {
+                  setAppBarTitleName("Customers");
+                }}
+              >
                 <ListItemIcon>
                   <PeopleIcon />
                 </ListItemIcon>
@@ -249,7 +280,12 @@ export default function Dashboard(props) {
               to="/reports"
               style={{ paddingLeft: 13, textDecoration: "none" }}
             >
-              <ListItem button>
+              <ListItem
+                button
+                onClick={() => {
+                  setAppBarTitleName("Reports");
+                }}
+              >
                 <ListItemIcon>
                   <BarChartIcon />
                 </ListItemIcon>
@@ -260,7 +296,12 @@ export default function Dashboard(props) {
               to="/theme"
               style={{ paddingLeft: 13, textDecoration: "none" }}
             >
-              <ListItem button>
+              <ListItem
+                button
+                onClick={() => {
+                  setAppBarTitleName("Theme");
+                }}
+              >
                 <ListItemIcon>
                   <ColorLensIcon />
                 </ListItemIcon>
@@ -275,16 +316,15 @@ export default function Dashboard(props) {
             <Route exact path="/user/dashboard">
               <Container>
                 <Typography variant="h3" gutterBottom>
-                  <Chart data={jwelaryData} />
+                  <Chart />
                 </Typography>
               </Container>
             </Route>
             <Route exact path="/user/dashboard/inventory">
               <Container>
                 <Typography variant="h3" gutterBottom>
-                  inventory
+                  <Inventory webToken={webToken} />
                 </Typography>
-                <Inventory data={jwelaryData} webToken={webToken} />
               </Container>
             </Route>
             <Route exact path="/transactions">
@@ -310,8 +350,7 @@ export default function Dashboard(props) {
             </Route>
             <Route exact path="/theme">
               <Container>
-                <Typography variant="h3" gutterBottom>
-                  Theme
+                <Typography variant="h1" gutterBottom>
                   <Theme onThemeChange={setAppTheme} />
                 </Typography>
               </Container>

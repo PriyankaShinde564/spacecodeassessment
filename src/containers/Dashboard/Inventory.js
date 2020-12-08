@@ -17,7 +17,8 @@ import {
 } from "@material-ui/core";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import InsertDriveFileOutlinedIcon from "@material-ui/icons/InsertDriveFileOutlined";
-import SearchIcon from "@material-ui/icons/Search";
+import SearchBar from "material-ui-search-bar";
+import { grey } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -72,7 +73,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
 }));
-export default function Inventory({ data }) {
+
+export default function Inventory() {
   const classes = useStyles();
   const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -84,12 +86,30 @@ export default function Inventory({ data }) {
       fontSize: 14,
     },
   }))(TableCell);
-  const [dense, setDense] = React.useState(false);
+  const [dense, setDense] = React.useState(true);
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
+
+  const [jwelaryData, setJwelaryData] = useState([]);
+  useEffect(() => {
+    fetch(
+      "https://d.jeweltrace.in/sku?id=5cfe1974a24ac0157013f843&rootInfo=company&page_no=0&limit=10",
+      {
+        method: "GET",
+        headers: {
+          "x-web-token":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjUyNTIiLCJuYW1lIjoiUGFua2FqIEdveWFuaSIsInBhc3N3b3JkIjoiYWRtaW4iLCJyb290Ijp7InN1YlNlY3Rpb25JZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdlMiIsInNlY3Rpb25JZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdlMSIsImZsb29ySWQiOiI1ZDM5Nzk0NTc2ZGZkOTUzMzVlM2Q3ZTAiLCJicmFuY2hJZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdkZiIsImNvbXBhbnlJZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdkZSJ9LCJlbXBJZCI6Im5laGEucGFybWFyQHNwYWNlY29kZS5jb20iLCJ1c2VydHlwZSI6IkFETUlOIiwiaWF0IjoxNjA2OTczNTg4LCJleHAiOjE2MjcyMDYwODV9.4iQwzx_i-J0P_0CyHqX4amszSwCbKqTXGy1V1rN38WE",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setJwelaryData(data.data_array);
+      });
+  }, []);
   const renderList = () => {
-    const list = data.map((x) => (
+    const list = jwelaryData.map((x) => (
       <TableRow key={x.sku_number}>
         <StyledTableCell>{x.sku_number}</StyledTableCell>
         <StyledTableCell>{x.design_code}</StyledTableCell>
@@ -102,7 +122,6 @@ export default function Inventory({ data }) {
         <StyledTableCell>Date</StyledTableCell>
         <StyledTableCell>
           <Button>
-            {" "}
             <VisibilityOutlinedIcon />
           </Button>
           <Button>
@@ -116,35 +135,38 @@ export default function Inventory({ data }) {
 
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(0);
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  const [searchValue, setSearchValue] = React.useState();
+
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    rowsPerPage -
+    Math.min(rowsPerPage, jwelaryData.length - page * rowsPerPage);
 
   return (
     <div>
       <Typography variant="h3" gutterBottom>
-        <div className={classes.search}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
-          </div>
-          <Box border={1} className={classes.boxInput}>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Box>
+        <div>
+          <SearchBar
+            value={searchValue}
+            onChange={(newValue) => setSearchValue({ value: newValue })}
+            placeholder="search"
+            // onRequestSearch={() => doSomethingWith(searchValue)}
+            style={{
+              width: "17%",
+              backgroundColor: grey[200],
+              color: grey[500],
+              marginBottom: "2%",
+              marginTop: "2%",
+            }}
+          />
         </div>
 
         <div>
           <Paper className={classes.paper}>
             <TableContainer container={Paper}>
-              <Table size={dense ? "small" : "medium"}>
+              <Table
+                size={dense ? "small" : "medium"}
+                style={{ alignContent: "center" }}
+              >
                 <TableHead>
                   <TableRow>
                     <StyledTableCell>SKU</StyledTableCell>

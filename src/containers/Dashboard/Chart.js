@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts";
 
 export default function Chart() {
-  const [jwelaryData, setJwelaryData] = useState([]);
+  const [jewelaryData, setJewelaryData] = useState([]);
   useEffect(() => {
     fetch(
       "https://d.jeweltrace.in/sku?id=5cfe1974a24ac0157013f843&rootInfo=company&page_no=0&limit=10",
@@ -16,11 +16,11 @@ export default function Chart() {
     )
       .then((response) => response.json())
       .then((data) => {
-        setJwelaryData(data.data_array);
+        setJewelaryData(data.data_array);
       });
   }, []);
   return (
-    <LineChart width={1200} height={400} data={jwelaryData}>
+    <LineChart width={1200} height={400} data={jewelaryData}>
       <Line type="monotone" dataKey="sales_value" stroke="#8884d8" dot={true} />
       <CartesianGrid stroke="#ccc" strokeDasharray="3 3" />
       <XAxis fontSize={20} />

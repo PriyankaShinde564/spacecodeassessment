@@ -8,8 +8,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  InputBase,
-  Box,
   Button,
   Paper,
   FormControlLabel,
@@ -19,6 +17,7 @@ import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import InsertDriveFileOutlinedIcon from "@material-ui/icons/InsertDriveFileOutlined";
 import SearchBar from "material-ui-search-bar";
 import { grey } from "@material-ui/core/colors";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -74,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Inventory() {
+export default function Inventory({ webToken, setSelectedSkuId }) {
   const classes = useStyles();
   const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -90,8 +89,34 @@ export default function Inventory() {
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
+  const [jewelData, setJewelData] = useState([]);
+  const history = useHistory();
+  const handleAction = () => {
+    console.log("Action needs to be take", jewelDetails);
+    const jewelInfo = jewelDetails.map((x) => {
+      <ul>
+        <li>{x.display}</li>
+      </ul>;
+    });
+    return jewelInfo;
+  };
 
-  const [jwelaryData, setJwelaryData] = useState([]);
+  const [jewelDetails, setJewelDetails] = useState([]);
+
+  useEffect(() => {
+    fetch("https://d.jeweltrace.in/sku?id=BG000050&rootInfo=sku", {
+      method: "GET",
+      headers: {
+        "x-web-token":
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjUyNTIiLCJuYW1lIjoiUGFua2FqIEdveWFuaSIsInBhc3N3b3JkIjoiYWRtaW4iLCJyb290Ijp7InN1YlNlY3Rpb25JZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdlMiIsInNlY3Rpb25JZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdlMSIsImZsb29ySWQiOiI1ZDM5Nzk0NTc2ZGZkOTUzMzVlM2Q3ZTAiLCJicmFuY2hJZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdkZiIsImNvbXBhbnlJZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdkZSJ9LCJlbXBJZCI6Im5laGEucGFybWFyQHNwYWNlY29kZS5jb20iLCJ1c2VydHlwZSI6IkFETUlOIiwiaWF0IjoxNjA2OTczNTg4LCJleHAiOjE2MjcyMDYwODV9.4iQwzx_i-J0P_0CyHqX4amszSwCbKqTXGy1V1rN38WE",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setJewelDetails(data.data_array);
+      });
+  }, []);
+
   useEffect(() => {
     fetch(
       "https://d.jeweltrace.in/sku?id=5cfe1974a24ac0157013f843&rootInfo=company&page_no=0&limit=10",
@@ -105,11 +130,12 @@ export default function Inventory() {
     )
       .then((response) => response.json())
       .then((data) => {
-        setJwelaryData(data.data_array);
+        setJewelData(data.data_array);
+        console.log("data      ", data);
       });
   }, []);
   const renderList = () => {
-    const list = jwelaryData.map((x) => (
+    const list = jewelData.map((x) => (
       <TableRow key={x.sku_number}>
         <StyledTableCell>{x.sku_number}</StyledTableCell>
         <StyledTableCell>{x.design_code}</StyledTableCell>
@@ -119,11 +145,25 @@ export default function Inventory() {
         <StyledTableCell>{x.net_weight}</StyledTableCell>
         <StyledTableCell>{x.sales_value}</StyledTableCell>
         <StyledTableCell>{x.sku_quantity}</StyledTableCell>
-        <StyledTableCell>Date</StyledTableCell>
+        <StyledTableCell>{x.updatedAt}</StyledTableCell>
         <StyledTableCell>
-          <Button>
+          <Button
+            onClick={() => {
+              setSelectedSkuId(x.sku_number);
+              history.push("/user/jewelDetails", {
+                skuNumber: x.sku_number,
+                rfid_number: x.rfid_number,
+                design_code: x.design_code,
+                design_category: x.design_category,
+                design_color: x.design_color,
+                sku_quantity: x.sku_quantity,
+                sales_value: x.sales_value,
+              });
+            }}
+          >
             <VisibilityOutlinedIcon />
           </Button>
+
           <Button>
             <InsertDriveFileOutlinedIcon />
           </Button>
@@ -138,8 +178,15 @@ export default function Inventory() {
   const [searchValue, setSearchValue] = React.useState();
 
   const emptyRows =
-    rowsPerPage -
-    Math.min(rowsPerPage, jwelaryData.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, jewelData.length - page * rowsPerPage);
+
+  const getTotalCarats = () => {
+    const total = jewelData.reduce((total, current) => ({
+      diamond_weight: total.diamond_weight + current.diamond_weight,
+    }));
+
+    return total.diamond_weight;
+  };
 
   return (
     <div>
@@ -158,8 +205,12 @@ export default function Inventory() {
               marginTop: "2%",
             }}
           />
+          <Typography variant="h5"> Total Stones:{jewelData.length}</Typography>
+          <Typography variant="h5">
+            Total Carats:
+            {jewelData.length > 0 ? getTotalCarats() : 0}
+          </Typography>
         </div>
-
         <div>
           <Paper className={classes.paper}>
             <TableContainer container={Paper}>
@@ -169,7 +220,7 @@ export default function Inventory() {
               >
                 <TableHead>
                   <TableRow>
-                    <StyledTableCell>SKU</StyledTableCell>
+                    <StyledTableCell>Sku Number</StyledTableCell>
                     <StyledTableCell>Design Code</StyledTableCell>
                     <StyledTableCell>Material</StyledTableCell>
                     <StyledTableCell>Design Category</StyledTableCell>

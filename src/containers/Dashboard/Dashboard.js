@@ -27,12 +27,14 @@ import {
   ThemeProvider,
   Box,
   MenuItem,
+  Button,
 } from "@material-ui/core";
 import Inventory from "./Inventory";
 import { useHistory } from "react-router-dom";
 import Theme from "./Theme";
 import Chart from "./Chart";
 import { grey } from "@material-ui/core/colors";
+import JewelDetails from "./JewelDetails";
 
 const drawerWidth = 240;
 
@@ -129,21 +131,18 @@ export default function Dashboard(props) {
 
   const [appTheme, setAppTheme] = useState();
   const [jwelaryData, setJwelaryData] = useState([]);
-  const [appBarTitleName, setAppBarTitleName] = useState("Dashboard");
+  const [appBarTitleName, setAppBarTitleName] = useState("");
+  const [selectedSkuId, setSelectedSkuId] = useState();
   const history = useHistory();
 
   let webToken;
   useEffect(() => {
     if (!props.location.state) {
-      history.push("/user/login");
+      // history.push("/user/login");
     } else if (props.location.state && props.location.state.webToken) {
       webToken = props.location.state.webToken;
     }
   });
-
-  const handleAppBarTitle = () => {
-    setAppBarTitleName("Inventory");
-  };
 
   useEffect(() => {
     fetch(
@@ -182,7 +181,6 @@ export default function Dashboard(props) {
             >
               <MenuIcon />
             </IconButton>
-
             <Typography
               component="h1"
               variant="h6"
@@ -190,13 +188,29 @@ export default function Dashboard(props) {
               noWrap
               className={classes.title}
             >
-              {appBarTitleName}
+              {selectedSkuId && (
+                <div>
+                  <div>
+                    <Button
+                      onClick={() => {
+                        setSelectedSkuId();
+                        history.push("/user/inventory");
+                      }}
+                    >
+                      <Typography component="h1" variant="h6" color="inherit">
+                        &lt;&lt; Back to Inventory
+                      </Typography>
+                    </Button>
+                  </div>
+                  Inventory &gt;&gt; {selectedSkuId}
+                </div>
+              )}
+              {!selectedSkuId && appBarTitleName}
               <MenuItem primaryText="Refresh" />
             </Typography>
           </Toolbar>
         </AppBar>
       </ThemeProvider>
-
       <Router>
         <Drawer
           variant="permanent"
@@ -217,11 +231,13 @@ export default function Dashboard(props) {
           </div>
           <Divider />
           <List>
-            <Link
-              to="/user/dashboard"
-              style={{ paddingLeft: 13, textDecoration: "none" }}
-            >
-              <ListItem button>
+            <Link to="/" style={{ paddingLeft: 13, textDecoration: "none" }}>
+              <ListItem
+                button
+                onClick={() => {
+                  setAppBarTitleName("Dashboard");
+                }}
+              >
                 <ListItemIcon>
                   <DashboardIcon />
                 </ListItemIcon>
@@ -229,7 +245,7 @@ export default function Dashboard(props) {
               </ListItem>
             </Link>
             <Link
-              to="/user/dashboard/inventory"
+              to="/user/inventory"
               style={{ paddingLeft: 13, textDecoration: "none" }}
             >
               <ListItem
@@ -312,50 +328,38 @@ export default function Dashboard(props) {
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          <Switch>
-            <Route exact path="/user/dashboard">
-              <Container>
-                <Typography variant="h3" gutterBottom>
-                  <Chart />
-                </Typography>
-              </Container>
-            </Route>
-            <Route exact path="/user/dashboard/inventory">
-              <Container>
-                <Typography variant="h3" gutterBottom>
-                  <Inventory webToken={webToken} />
-                </Typography>
-              </Container>
-            </Route>
-            <Route exact path="/transactions">
-              <Container>
-                <Typography variant="h3" gutterBottom>
-                  transactions
-                </Typography>
-              </Container>
-            </Route>
-            <Route exact path="/customers">
-              <Container>
-                <Typography variant="h3" gutterBottom>
-                  Customers
-                </Typography>
-              </Container>
-            </Route>
-            <Route exact path="/reports">
-              <Container>
-                <Typography variant="h3" gutterBottom>
-                  Reports
-                </Typography>
-              </Container>
-            </Route>
-            <Route exact path="/theme">
-              <Container>
-                <Typography variant="h1" gutterBottom>
-                  <Theme onThemeChange={setAppTheme} />
-                </Typography>
-              </Container>
-            </Route>
-          </Switch>
+          <Container>
+            <Typography variant="h3" gutterBottom />
+
+            <Switch>
+              <Route exact path="/">
+                <Chart />
+              </Route>
+              <Route exact path="/user/inventory">
+                <Inventory
+                  webToken={webToken}
+                  setSelectedSkuId={setSelectedSkuId}
+                />
+              </Route>
+              <Route exact path="/transactions">
+                transactions
+              </Route>
+              <Route exact path="/customers">
+                Customers
+              </Route>
+              <Route exact path="/reports">
+                Reports
+              </Route>
+              <Route exact path="/theme">
+                <Theme onThemeChange={setAppTheme} />
+              </Route>
+              <Route
+                exact
+                path="/user/jewelDetails"
+                component={JewelDetails}
+              ></Route>
+            </Switch>
+          </Container>
         </main>
       </Router>
     </div>

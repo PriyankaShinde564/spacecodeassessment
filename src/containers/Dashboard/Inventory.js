@@ -12,6 +12,7 @@ import {
   Paper,
   FormControlLabel,
   Switch,
+  Box,
 } from "@material-ui/core";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import InsertDriveFileOutlinedIcon from "@material-ui/icons/InsertDriveFileOutlined";
@@ -91,31 +92,6 @@ export default function Inventory({ webToken, setSelectedSkuId }) {
   };
   const [jewelData, setJewelData] = useState([]);
   const history = useHistory();
-  const handleAction = () => {
-    console.log("Action needs to be take", jewelDetails);
-    const jewelInfo = jewelDetails.map((x) => {
-      <ul>
-        <li>{x.display}</li>
-      </ul>;
-    });
-    return jewelInfo;
-  };
-
-  const [jewelDetails, setJewelDetails] = useState([]);
-
-  useEffect(() => {
-    fetch("https://d.jeweltrace.in/sku?id=BG000050&rootInfo=sku", {
-      method: "GET",
-      headers: {
-        "x-web-token":
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjUyNTIiLCJuYW1lIjoiUGFua2FqIEdveWFuaSIsInBhc3N3b3JkIjoiYWRtaW4iLCJyb290Ijp7InN1YlNlY3Rpb25JZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdlMiIsInNlY3Rpb25JZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdlMSIsImZsb29ySWQiOiI1ZDM5Nzk0NTc2ZGZkOTUzMzVlM2Q3ZTAiLCJicmFuY2hJZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdkZiIsImNvbXBhbnlJZCI6IjVkMzk3OTQ1NzZkZmQ5NTMzNWUzZDdkZSJ9LCJlbXBJZCI6Im5laGEucGFybWFyQHNwYWNlY29kZS5jb20iLCJ1c2VydHlwZSI6IkFETUlOIiwiaWF0IjoxNjA2OTczNTg4LCJleHAiOjE2MjcyMDYwODV9.4iQwzx_i-J0P_0CyHqX4amszSwCbKqTXGy1V1rN38WE",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setJewelDetails(data.data_array);
-      });
-  }, []);
 
   useEffect(() => {
     fetch(
@@ -152,6 +128,7 @@ export default function Inventory({ webToken, setSelectedSkuId }) {
               setSelectedSkuId(x.sku_number);
               history.push("/user/jewelDetails", {
                 skuNumber: x.sku_number,
+                url: x.url,
                 rfid_number: x.rfid_number,
                 design_code: x.design_code,
                 design_category: x.design_category,
@@ -164,7 +141,9 @@ export default function Inventory({ webToken, setSelectedSkuId }) {
             <VisibilityOutlinedIcon />
           </Button>
 
-          <Button>
+          <Button onClick={()=>{
+            history.push("/user/creatingPdf")
+          }}>
             <InsertDriveFileOutlinedIcon />
           </Button>
         </StyledTableCell>
@@ -192,24 +171,32 @@ export default function Inventory({ webToken, setSelectedSkuId }) {
     <div>
       <Typography variant="h3" gutterBottom>
         <div>
-          <SearchBar
-            value={searchValue}
-            onChange={(newValue) => setSearchValue({ value: newValue })}
-            placeholder="search"
-            // onRequestSearch={() => doSomethingWith(searchValue)}
-            style={{
-              width: "17%",
-              backgroundColor: grey[200],
-              color: grey[500],
-              marginBottom: "2%",
-              marginTop: "2%",
-            }}
-          />
-          <Typography variant="h5"> Total Stones:{jewelData.length}</Typography>
-          <Typography variant="h5">
-            Total Carats:
-            {jewelData.length > 0 ? getTotalCarats() : 0}
-          </Typography>
+          <Box display="flex" component="span" m={1}>
+            <SearchBar
+              value={searchValue}
+              onChange={(newValue) => setSearchValue({ value: newValue })}
+              placeholder="search"
+              // onRequestSearch={() => doSomethingWith(searchValue)}
+              style={{
+                width: "17%",
+                backgroundColor: grey[200],
+                color: grey[500],
+                marginBottom: "2%",
+                marginTop: "2%",
+              }}
+            />
+            <div>
+              <Typography variant="h5">
+                Total Stones:{jewelData.length}
+              </Typography>
+            </div>
+            <div>
+              <Typography variant="h5">
+                Total Carats:
+                {jewelData.length > 0 ? getTotalCarats() : 0}
+              </Typography>
+            </div>
+          </Box>
         </div>
         <div>
           <Paper className={classes.paper}>

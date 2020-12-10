@@ -108,9 +108,7 @@ export default function UserLogin(props) {
     })
       .then((response) => response.json())
       .then((res) => {
-        console.log("Success:", res);
-        console.log("user", user);
-        console.log("token", res.data.web_token[0]);
+
         if (res.status) {
           history.push("/user/dashboard", {
             webToken: res.data.web_token,

@@ -35,6 +35,7 @@ import Theme from "./Theme";
 import Chart from "./Chart";
 import { grey } from "@material-ui/core/colors";
 import JewelDetails from "./JewelDetails";
+import Pdf from "./Pdf";
 
 const drawerWidth = 240;
 
@@ -146,7 +147,7 @@ export default function Dashboard(props) {
 
   useEffect(() => {
     fetch(
-      "https://d.jeweltrace.in/sku?id=5cfe1974a24ac0157013f843&rootInfo=company&page_no=0&limit=10",
+      "https://d.jeweltrace.in/sku?id=5cfe1974a24ac0157013f843&rootInfo=company&page_no=3&limit=30",
       {
         method: "GET",
         headers: {
@@ -358,6 +359,7 @@ export default function Dashboard(props) {
                 path="/user/jewelDetails"
                 component={JewelDetails}
               ></Route>
+              <Route exact path="/user/creatingPdf" component={Pdf}></Route>
             </Switch>
           </Container>
         </main>

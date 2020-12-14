@@ -104,7 +104,7 @@ TablePaginationActions.propTypes = {
 const useStyles2 = makeStyles({
   table: {
     minWidth: 600,
-    padding:"1px",
+    padding: "1px",
   },
   tableHeader: {
     backgroundColor: "#878787",
@@ -155,34 +155,34 @@ export default function InventoryTable({ data }) {
       <Table className={classes.table} aria-label="custom pagination table">
         <TableHead className={classes.tableHeader}>
           <TableRow>
-            <TableCell className={classes.tableCell} align="left">
+            <TableCell className={classes.tableCell} align="center">
               SKU
             </TableCell>
-            <TableCell className={classes.tableCell} align="left">
+            <TableCell className={classes.tableCell} align="center">
               Design Code
             </TableCell>
-            <TableCell className={classes.tableCell} align="left">
+            <TableCell className={classes.tableCell} align="center">
               Material
             </TableCell>
-            <TableCell className={classes.tableCell} align="left">
+            <TableCell className={classes.tableCell} align="center">
               Design Category
             </TableCell>
-            <TableCell className={classes.tableCell} align="left">
+            <TableCell className={classes.tableCell} align="center">
               Diamond Ct.
             </TableCell>
-            <TableCell className={classes.tableCell} align="left">
+            <TableCell className={classes.tableCell} align="center">
               Net Weight
             </TableCell>
-            <TableCell className={classes.tableCell} align="left">
+            <TableCell className={classes.tableCell} align="center">
               Price
             </TableCell>
-            <TableCell className={classes.tableCell} align="left">
+            <TableCell className={classes.tableCell} align="center">
               SKU Qty
             </TableCell>
-            <TableCell className={classes.tableCell} align="left">
+            <TableCell className={classes.tableCell} align="center">
               Date
             </TableCell>
-            <TableCell className={classes.tableCell} align="left">
+            <TableCell className={classes.tableCell} align="center">
               Action
             </TableCell>
           </TableRow>
@@ -190,19 +190,19 @@ export default function InventoryTable({ data }) {
         <TableBody>
           {jewelData.map((row) => (
             <TableRow key={row.design_code}>
-              <TableCell align="left">{row.sku_number}</TableCell>
-              <TableCell align="left">{row.design_code}</TableCell>
-              <TableCell align="left">{row.metal_type}</TableCell>
-              <TableCell align="left">{row.design_category}</TableCell>
-              <TableCell align="left">{row.diamond_weight}</TableCell>
-              <TableCell align="left">{row.net_weight}</TableCell>
-              <TableCell align="left">{row.sales_value}</TableCell>
-              <TableCell align="left">{row.sku_quantity}</TableCell>
-              <TableCell align="left">
+              <TableCell align="center">{row.sku_number}</TableCell>
+              <TableCell align="center">{row.design_code}</TableCell>
+              <TableCell align="center">{row.metal_type}</TableCell>
+              <TableCell align="center">{row.design_category}</TableCell>
+              <TableCell align="center">{row.diamond_weight}</TableCell>
+              <TableCell align="center">{row.net_weight}</TableCell>
+              <TableCell align="center">{row.sales_value}</TableCell>
+              <TableCell align="center">{row.sku_quantity}</TableCell>
+              <TableCell align="center">
                 <Moment format="DD-MM-YYYY">{row.createdAt}</Moment>
               </TableCell>
-              <TableCell align="left">
-                <Grid container spacing={1} alignItems="center">
+              <TableCell align="center">
+                <Grid container >
                   <Grid item>
                     <IconButton
                       onClick={() => {

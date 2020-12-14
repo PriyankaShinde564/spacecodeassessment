@@ -35,7 +35,7 @@ import Theme from "./Theme";
 import Chart from "./Chart";
 import { grey } from "@material-ui/core/colors";
 import JewelDetails from "./JewelDetails";
-import Pdf from "./Pdf";
+import PDF from "./PDF";
 
 const drawerWidth = 240;
 
@@ -122,7 +122,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard(props) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -133,7 +133,6 @@ export default function Dashboard(props) {
   const [appTheme, setAppTheme] = useState();
   const [jwelaryData, setJwelaryData] = useState([]);
   const [appBarTitleName, setAppBarTitleName] = useState("");
-  const [selectedSkuId, setSelectedSkuId] = useState();
   const history = useHistory();
 
   let webToken;
@@ -189,24 +188,7 @@ export default function Dashboard(props) {
               noWrap
               className={classes.title}
             >
-              {selectedSkuId && (
-                <div>
-                  <div>
-                    <Button
-                      onClick={() => {
-                        setSelectedSkuId();
-                        history.push("/user/inventory");
-                      }}
-                    >
-                      <Typography component="h1" variant="h6" color="inherit">
-                        &lt;&lt; Back to Inventory
-                      </Typography>
-                    </Button>
-                  </div>
-                  Inventory &gt;&gt; {selectedSkuId}
-                </div>
-              )}
-              {!selectedSkuId && appBarTitleName}
+              {appBarTitleName}
               <MenuItem primaryText="Refresh" />
             </Typography>
           </Toolbar>
@@ -337,10 +319,7 @@ export default function Dashboard(props) {
                 <Chart />
               </Route>
               <Route exact path="/user/inventory">
-                <Inventory
-                  webToken={webToken}
-                  setSelectedSkuId={setSelectedSkuId}
-                />
+                <Inventory webToken={webToken} />
               </Route>
               <Route exact path="/transactions">
                 transactions
@@ -359,7 +338,7 @@ export default function Dashboard(props) {
                 path="/user/jewelDetails"
                 component={JewelDetails}
               ></Route>
-              <Route exact path="/user/creatingPdf" component={Pdf}></Route>
+              <Route exact path="/user/creatingPdf" component={PDF}></Route>
             </Switch>
           </Container>
         </main>

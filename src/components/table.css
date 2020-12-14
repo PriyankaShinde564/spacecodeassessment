@@ -1,0 +1,7 @@
+.tableRow
+  > .MuiTable-root
+  > .MuiTableBody-root
+  > .MuiTableRow-root
+  > .MuiTableCell-root {
+  padding: 0.01 0 0 0 !important;
+}
